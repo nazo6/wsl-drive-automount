@@ -1,0 +1,9 @@
+[package]
+name = "wsl-drive-automount"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+wmi = "0.14"
+serde = { version = "1", features = ["derive"] }
+futures = { version = "0.3.31", features = ["executor"] }
