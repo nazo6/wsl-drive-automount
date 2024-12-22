@@ -1,4 +1,8 @@
+#![cfg_attr(feature = "silent", windows_subsystem = "windows")]
+
 use std::{collections::HashMap, time::Duration};
+
+use std::os::windows::process::CommandExt;
 
 use futures::StreamExt as _;
 use serde::Deserialize;
@@ -17,6 +21,8 @@ struct NewEvent {
 struct LogicalDisk {
     name: String,
 }
+
+const CREATE_NO_WINDOW: u32 = 0x08000000;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     futures::executor::block_on(main_inner())
@@ -55,6 +61,7 @@ fn execut_mount(drive_path: &str) -> Result<(), Box<dyn std::error::Error>> {
         .to_lowercase();
 
     let is_wsl_running = std::process::Command::new("wsl")
+        .creation_flags(CREATE_NO_WINDOW)
         .arg("--list")
         .arg("--running")
         .spawn()?
@@ -64,6 +71,7 @@ fn execut_mount(drive_path: &str) -> Result<(), Box<dyn std::error::Error>> {
 
     if is_wsl_running {
         let res = std::process::Command::new("wsl")
+            .creation_flags(CREATE_NO_WINDOW)
             .args(["-u", "root", "-e", "mount", "-t", "drvfs", drive_path])
             .arg(format!("/mnt/{}", drive_letter))
             .spawn()?

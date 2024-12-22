@@ -7,3 +7,6 @@ edition = "2021"
 wmi = "0.14"
 serde = { version = "1", features = ["derive"] }
 futures = { version = "0.3.31", features = ["executor"] }
+
+[features]
+silent = []
